@@ -1,0 +1,17 @@
+Package: TWB2R
+Title: Extract Meta-data from a Tableau TWB File to Automate Documentation
+Version: 0.0.0.1
+Authors@R: 
+    person("Kirstin", "Lyon", , "kirstin@mltwelve.com", role = c("aut", "cre"),
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: Extracts meta-data from a Tableau TWB file that is converted to XML for automating different documentation tasks. Functions include creating a data dictionary.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
+Imports: 
+    dplyr,
+    magrittr,
+    purrr,
+    stringr,
+    xml2
