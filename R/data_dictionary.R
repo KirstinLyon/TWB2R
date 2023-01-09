@@ -3,7 +3,7 @@
 #' @param data an xml file
 #' @param twb_xpath the name of the xpath tag
 #'
-#' @return returns wanted xpath fiels as a tibble
+#' @return returns wanted xpath fields as a tibble
 #' @export
 #'
 convert_cols_xml_to_tbl <- function(data,twb_xpath){
@@ -14,12 +14,17 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
 }
 
 
-#' Create Data Dicationary from column and calculation tags
+#' Create Data Dictionary from column and calculation tags
 #'
 #' @param twb_file An xml file
 #'
 #' @return returns a data dictionary
 #' @export
+#'
+#' @examples
+#'  \dontrun{
+#'    data_dictionary(twb_file = "test.xml")
+#' }
 #'
 data_dictionary <- function (twb_file){
 

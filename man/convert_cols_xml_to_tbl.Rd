@@ -12,7 +12,7 @@ convert_cols_xml_to_tbl(data, twb_xpath)
 \item{twb_xpath}{the name of the xpath tag}
 }
 \value{
-returns wanted xpath fiels as a tibble
+returns wanted xpath fields as a tibble
 }
 \description{
 Helper function for pulling out information from an xml file using a given xpath

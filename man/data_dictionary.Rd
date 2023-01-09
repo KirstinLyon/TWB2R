@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_dictionary.R
 \name{data_dictionary}
 \alias{data_dictionary}
-\title{Create Data Dicationary from column and calculation tags}
+\title{Create Data Dictionary from column and calculation tags}
 \usage{
 data_dictionary(twb_file)
 }
@@ -13,5 +13,11 @@ data_dictionary(twb_file)
 returns a data dictionary
 }
 \description{
-Create Data Dicationary from column and calculation tags
+Create Data Dictionary from column and calculation tags
+}
+\examples{
+ \dontrun{
+   data_dictionary(twb_file = "test.xml")
+}
+
 }
