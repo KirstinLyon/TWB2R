@@ -33,24 +33,63 @@ data_dictionary <- function (twb_file){
     all_cols <- convert_cols_xml_to_tbl(twb_file, "..//column")
 
     all_raw_tbl <- all_cols %>%
-        dplyr::filter(!is.na(type),is.na(caption)) %>%
-        dplyr::mutate(formula = NA, tableau_name = NA, name = stringr::str_remove_all(name, "[\\[\\]]")) %>%
-        dplyr::select(-ordinal, -caption, -value)
+        dplyr::distinct(.) %>%
+        dplyr::filter(!is.na(type)) %>%
+        dplyr::mutate(field_type = dplyr::case_when(base::startsWith(name,"[Parameter") ~ "Parameter",
+                                      base::startsWith(name, "[Calculation") ~"Calculation",
+                                      base::endsWith(name, "(group)]") ~ "Group",
+                                      TRUE ~ "other"),
+               has_alias = !is.na(caption)) %>%
+        dplyr::filter(field_type != "Parameter", field_type != "Calculation")
+
 
     # Scenario 2:  calculations and parameters ----
 
-    all_calcs <- convert_cols_xml_to_tbl(twb_file, "//column[@caption]")
-    all_calcs_details <- convert_cols_xml_to_tbl(twb_file, ".//column/calculation")
+    all_calcs <- convert_cols_xml_to_tbl(twb_file, "//column[@caption]") %>%
+        dplyr::distinct(.) %>%
+        dplyr::mutate(field_type = dplyr::case_when(base::startsWith(name,"[Parameter") ~ "Parameter",
+                                      base::startsWith(name, "[Calculation") ~"Calculation",
+                                      base::endsWith(name, "(group)]") ~ "Group",
+                                      TRUE ~ "other")) %>%
+        dplyr::filter(field_type != "other")
+
+
+
+    all_calcs_details <- convert_cols_xml_to_tbl(twb_file, ".//column/calculation") %>%
+        dplyr::distinct(.) %>%
+        dplyr::filter(!is.na(formula))
+
 
     all_calcs_tbl <- dplyr::bind_cols(all_calcs, all_calcs_details) %>%
-        dplyr::distinct() %>%
         dplyr::select(-class, -value) %>%
-        dplyr::rename("name" = "caption", "tableau_name" = "name")
+        dplyr::mutate(has_alias = FALSE)
 
 
     # Combine raw and calculations and output data ----
 
     data_dictionary_tbl <- all_raw_tbl %>%
-        dplyr::union(all_calcs_tbl) %>%
-        dplyr::select(name, datatype, role, type, 'default-format', formula, alias, tableau_name, 'param-domain-type')
+        dplyr::union_all(all_calcs_tbl) %>%
+        dplyr::mutate(tableau_name = dplyr::case_when(!is.na(caption) ~ caption,
+                                        TRUE ~ name)) %>%
+        dplyr::mutate(tableau_name = stringr::str_remove_all(tableau_name, "[\\[\\]]")) %>%
+        dplyr::select(tableau_name, caption, name,  datatype, 'default-format', formula, has_alias)
+
+}
+
+#' Title Create a table of Contents based on the workbook
+#'
+#' @param twb_file an xml file
+#'
+#' @return Table of contents
+#' @export
+#'
+#' @examples
+#'   \dontrun{
+#'    create_toc(twb_file = "test.xml")
+#' }
+create_toc <- function(twb_file){
+    TOC <- convert_cols_xml_to_tbl(twb_file, "//window") %>%
+        dplyr::rename("type" = "class") %>%
+        dplyr::select(-hidden, -maximized)
+
 }

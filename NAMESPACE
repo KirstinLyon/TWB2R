@@ -2,5 +2,6 @@
 
 export("%>%")
 export(convert_cols_xml_to_tbl)
+export(create_toc)
 export(data_dictionary)
 importFrom(magrittr,"%>%")
