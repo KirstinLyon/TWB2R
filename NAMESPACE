@@ -2,6 +2,9 @@
 
 export("%>%")
 export(convert_cols_xml_to_tbl)
-export(create_toc)
+export(create_dd)
 export(data_dictionary)
+export(other_created_overview)
+export(parameters_overview)
+export(raw_fields_overview)
 importFrom(magrittr,"%>%")
