@@ -17,6 +17,6 @@ Create an overview of all visible fields from a twb file
 }
 \examples{
  \dontrun{
-   data_dictionary(twb_file = "test.xml")
+   raw_fields_overview(twb_file = "test.xml")
 }
 }

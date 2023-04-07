@@ -17,6 +17,6 @@ List of other fields created in tableau
 }
 \examples{
  \dontrun{
-   data_dictionary(twb_file = "test.xml")
+   other_created_overview(twb_file = "test.xml")
 }
 }

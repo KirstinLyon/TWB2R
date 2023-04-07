@@ -17,6 +17,6 @@ Create overview of parameters
 }
 \examples{
  \dontrun{
-   data_dictionary(twb_file = "test.xml")
+   parameters_overview(twb_file = "test.xml")
 }
 }

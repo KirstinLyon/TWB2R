@@ -2,7 +2,7 @@
 % Please edit documentation in R/data_dictionary.R
 \name{create_dd}
 \alias{create_dd}
-\title{Create a data dictionary consisting of raw fields and calculated fields}
+\title{Create a list consisting of raw fields and calculated fields}
 \usage{
 create_dd(twb_file)
 }
@@ -13,10 +13,10 @@ create_dd(twb_file)
 A list of raw and calculated fields from the tableau workbook
 }
 \description{
-Create a data dictionary consisting of raw fields and calculated fields
+Create a list consisting of raw fields and calculated fields
 }
 \examples{
  \dontrun{
-   data_dictionary(twb_file = "test.xml")
+   create_dd(twb_file = "test.xml")
 }
 }

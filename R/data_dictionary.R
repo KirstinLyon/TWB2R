@@ -14,68 +14,6 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
 }
 
 
-#' Create Data Dictionary from column and calculation tags
-#'
-#' @param twb_file An xml file
-#'
-#' @return returns a data dictionary
-#' @export
-#'
-#' @examples
-#'  \dontrun{
-#'    data_dictionary(twb_file = "test.xml")
-#' }
-#'
-data_dictionary <- function (twb_file){
-
-
-    #Scenario 1:  Raw data ----
-    all_cols <- convert_cols_xml_to_tbl(twb_file, "..//column")
-
-    all_raw_tbl <- all_cols %>%
-        dplyr::distinct(.) %>%
-        dplyr::filter(!is.na(type)) %>%
-        dplyr::mutate(field_type = dplyr::case_when(base::startsWith(name,"[Parameter") ~ "Parameter",
-                                      base::startsWith(name, "[Calculation") ~"Calculation",
-                                      base::endsWith(name, "(group)]") ~ "Group",
-                                      TRUE ~ "other"),
-               has_alias = !is.na(caption)) %>%
-        dplyr::filter(field_type != "Parameter", field_type != "Calculation")
-
-
-    # Scenario 2:  calculations and parameters ----
-
-    all_calcs <- convert_cols_xml_to_tbl(twb_file, "//column[@caption]") %>%
-        dplyr::distinct(.) %>%
-        dplyr::mutate(field_type = dplyr::case_when(base::startsWith(name,"[Parameter") ~ "Parameter",
-                                      base::startsWith(name, "[Calculation") ~"Calculation",
-                                      base::endsWith(name, "(group)]") ~ "Group",
-                                      TRUE ~ "other")) %>%
-        dplyr::filter(field_type != "other")
-
-
-
-    all_calcs_details <- convert_cols_xml_to_tbl(twb_file, ".//column/calculation") %>%
-        dplyr::distinct(.) %>%
-        dplyr::filter(!is.na(formula))
-
-
-    all_calcs_tbl <- dplyr::bind_cols(all_calcs, all_calcs_details) %>%
-        dplyr::select(-class, -value) %>%
-        dplyr::mutate(has_alias = FALSE)
-
-
-    # Combine raw and calculations and output data ----
-
-    data_dictionary_tbl <- all_raw_tbl %>%
-        dplyr::union_all(all_calcs_tbl) %>%
-        dplyr::mutate(tableau_name = dplyr::case_when(!is.na(caption) ~ caption,
-                                        TRUE ~ name)) %>%
-        dplyr::mutate(tableau_name = stringr::str_remove_all(tableau_name, "[\\[\\]]")) %>%
-        dplyr::select(tableau_name, caption, name,  datatype, 'default-format', formula, has_alias)
-
-}
-
 #' Create an overview of all visible fields from a twb file
 #'
 #' @param twb_file an XML file generated from a twb
@@ -85,7 +23,7 @@ data_dictionary <- function (twb_file){
 #'
 #' @examples
 #'  \dontrun{
-#'    data_dictionary(twb_file = "test.xml")
+#'    raw_fields_overview(twb_file = "test.xml")
 #' }
 
 raw_fields_overview <- function(twb_file) {
@@ -117,7 +55,7 @@ raw_fields_overview <- function(twb_file) {
 #'
 #' @examples
 #'  \dontrun{
-#'    data_dictionary(twb_file = "test.xml")
+#'    parameters_overview(twb_file = "test.xml")
 #' }
 
 
@@ -155,7 +93,7 @@ parameters_overview <- function(twb_file){
 #'
 #' @examples
 #'  \dontrun{
-#'    data_dictionary(twb_file = "test.xml")
+#'    other_created_overview(twb_file = "test.xml")
 #' }
 
 
@@ -211,9 +149,11 @@ other_created_overview <- function(twb_file){
     all_other$calculation <- stringr::str_replace_all(all_other$calculation,
                                                       pattern = stringr::fixed(pattern_vector))
 
+    calcs_only <- all_other
+
 }
 
-#' Create a data dictionary consisting of raw fields and calculated fields
+#' Create a list consisting of raw fields and calculated fields
 #'
 #' @param twb_file A twb file
 #'
@@ -222,7 +162,7 @@ other_created_overview <- function(twb_file){
 #'
 #' @examples
 #'  \dontrun{
-#'    data_dictionary(twb_file = "test.xml")
+#'    create_dd(twb_file = "test.xml")
 #' }
 
 create_dd <- function(twb_file){
