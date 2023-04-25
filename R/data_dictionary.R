@@ -33,8 +33,6 @@ raw_fields_overview <- function(twb_file) {
         janitor::clean_names() %>%
         dplyr::distinct() %>%
         dplyr::filter(!is.na(role)) %>%
- #      dplyr::filter(is.na(hidden)) %>%  # need a way to check it before using
-        #tidyr::drop_na(dplyr::if_any(hidden))
         dplyr::filter(
             dplyr::if_any(
                 .cols = dplyr::any_of("hidden"),
@@ -79,19 +77,15 @@ parameters_overview <- function(twb_file){
         dplyr::bind_cols(all_created_calcs) %>%
         janitor::clean_names() %>%
         dplyr::select(-which(names(.) == 'folder_name')) %>%
-        #tidyr::drop_na(dplyr::if_any("unnamed"))
         dplyr::filter(
             dplyr::if_any(
                 .cols = dplyr::any_of("unnamed"),
                 .fns = ~is.na(.x)
             )
         )
-        #dplyr::filter(is.na(unnamed))
-
 
     #separate in to parameters and other
     all_param <- all_created %>%
-        #dplyr::filter(!is.na(`param_domain_type`)) %>%
         dplyr::filter(
             dplyr::if_any(
                 .cols = dplyr::any_of("param_domain_type"),
@@ -130,8 +124,6 @@ other_created_overview <- function(twb_file){
         dplyr::bind_cols(all_created_calcs) %>%
         janitor::clean_names() %>%
         dplyr::select(-which(names(.) == 'folder_name')) %>%
-        #dplyr::filter(is.na(unnamed))  # need to find a way to test if it exists before using it
-        #tidyr::drop_na(dplyr::if_any(unnamed))
         dplyr::filter(
             dplyr::if_any(
                 .cols = dplyr::any_of("unnamed"),
@@ -142,7 +134,6 @@ other_created_overview <- function(twb_file){
 
     #separate in to parameters and other
     all_param <- all_created %>%
-        #dplyr::filter(!is.na(`param_domain_type`)) %>%
         dplyr::filter(
             dplyr::if_any(
                 .cols = dplyr::any_of("param_domain_type"),
@@ -156,14 +147,13 @@ other_created_overview <- function(twb_file){
                       default_value = value)
 
     all_other <- all_created %>%
-        #dplyr::filter(is.na(`param_domain_type`)) %>%
         dplyr::filter(
             dplyr::if_any(
                 .cols = dplyr::any_of("param_domain_type"),
                 .fns = ~is.na(.x)
             )
         ) %>%
-       # tidyr::drop_na(dplyr::if_any("param_domain_type")) %>%
+
         dplyr::distinct() %>%
         dplyr::rename(calculation = formula,
                       unique_id = name,
