@@ -34,7 +34,14 @@ raw_fields_overview <- function(twb_file) {
         dplyr::distinct() %>%
         dplyr::filter(!is.na(role)) %>%
  #      dplyr::filter(is.na(hidden)) %>%  # need a way to check it before using
-        tidyr::drop_na(dplyr::if_any(hidden))
+        #tidyr::drop_na(dplyr::if_any(hidden))
+        dplyr::filter(
+            dplyr::if_any(
+                .cols = dplyr::any_of("hidden"),
+                .fns = ~is.na(.x)
+            )
+        ) %>%
+
         dplyr::mutate(has_alias = dplyr::case_when(
             is.na(caption) ~ FALSE,
             TRUE ~ TRUE
@@ -46,6 +53,7 @@ raw_fields_overview <- function(twb_file) {
         dplyr::rename(original_name = name,
                       name = caption)
 }
+
 
 #' Create overview of parameters
 #'
@@ -71,13 +79,25 @@ parameters_overview <- function(twb_file){
         dplyr::bind_cols(all_created_calcs) %>%
         janitor::clean_names() %>%
         dplyr::select(-which(names(.) == 'folder_name')) %>%
-        tidyr::drop_na(dplyr::if_any("unnamed"))
+        #tidyr::drop_na(dplyr::if_any("unnamed"))
+        dplyr::filter(
+            dplyr::if_any(
+                .cols = dplyr::any_of("unnamed"),
+                .fns = ~is.na(.x)
+            )
+        )
         #dplyr::filter(is.na(unnamed))
 
 
     #separate in to parameters and other
     all_param <- all_created %>%
-        dplyr::filter(!is.na(`param_domain_type`)) %>%
+        #dplyr::filter(!is.na(`param_domain_type`)) %>%
+        dplyr::filter(
+            dplyr::if_any(
+                .cols = dplyr::any_of("param_domain_type"),
+                .fns = ~ !is.na(.x)
+            )
+        ) %>%
         dplyr::distinct() %>%
         dplyr::rename(unique_id = name,
                       name = caption,
@@ -111,12 +131,24 @@ other_created_overview <- function(twb_file){
         janitor::clean_names() %>%
         dplyr::select(-which(names(.) == 'folder_name')) %>%
         #dplyr::filter(is.na(unnamed))  # need to find a way to test if it exists before using it
-        tidyr::drop_na(dplyr::if_any(unnamed))
+        #tidyr::drop_na(dplyr::if_any(unnamed))
+        dplyr::filter(
+            dplyr::if_any(
+                .cols = dplyr::any_of("unnamed"),
+                .fns = ~is.na(.x)
+            )
+        )
 
 
     #separate in to parameters and other
     all_param <- all_created %>%
-        dplyr::filter(!is.na(`param_domain_type`)) %>%
+        #dplyr::filter(!is.na(`param_domain_type`)) %>%
+        dplyr::filter(
+            dplyr::if_any(
+                .cols = dplyr::any_of("param_domain_type"),
+                .fns = ~ !is.na(.x)
+            )
+        ) %>%
         dplyr::distinct() %>%
         dplyr::rename(unique_id = name,
                       name = caption,
@@ -125,7 +157,13 @@ other_created_overview <- function(twb_file){
 
     all_other <- all_created %>%
         #dplyr::filter(is.na(`param_domain_type`)) %>%
-        tidyr::drop_na(dplyr::if_any("param_domain_type")) %>%
+        dplyr::filter(
+            dplyr::if_any(
+                .cols = dplyr::any_of("param_domain_type"),
+                .fns = ~is.na(.x)
+            )
+        ) %>%
+       # tidyr::drop_na(dplyr::if_any("param_domain_type")) %>%
         dplyr::distinct() %>%
         dplyr::rename(calculation = formula,
                       unique_id = name,
