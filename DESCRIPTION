@@ -15,4 +15,5 @@ Imports:
     magrittr,
     purrr,
     stringr,
+    tidyr,
     xml2

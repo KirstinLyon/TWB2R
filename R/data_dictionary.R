@@ -33,7 +33,8 @@ raw_fields_overview <- function(twb_file) {
         janitor::clean_names() %>%
         dplyr::distinct() %>%
         dplyr::filter(!is.na(role)) %>%
- #       dplyr::filter(is.na(hidden)) %>%  # need a way to check it before using
+ #      dplyr::filter(is.na(hidden)) %>%  # need a way to check it before using
+        tidyr::drop_na(dplyr::if_any(hidden))
         dplyr::mutate(has_alias = dplyr::case_when(
             is.na(caption) ~ FALSE,
             TRUE ~ TRUE
@@ -70,7 +71,8 @@ parameters_overview <- function(twb_file){
         dplyr::bind_cols(all_created_calcs) %>%
         janitor::clean_names() %>%
         dplyr::select(-which(names(.) == 'folder_name')) %>%
-        dplyr::filter(is.na(unnamed))
+        tidyr::drop_na(dplyr::if_any("unnamed"))
+        #dplyr::filter(is.na(unnamed))
 
 
     #separate in to parameters and other
@@ -109,6 +111,7 @@ other_created_overview <- function(twb_file){
         janitor::clean_names() %>%
         dplyr::select(-which(names(.) == 'folder_name')) %>%
         #dplyr::filter(is.na(unnamed))  # need to find a way to test if it exists before using it
+        tidyr::drop_na(dplyr::if_any(unnamed))
 
 
     #separate in to parameters and other
@@ -121,7 +124,8 @@ other_created_overview <- function(twb_file){
                       default_value = value)
 
     all_other <- all_created %>%
-        dplyr::filter(is.na(`param_domain_type`)) %>%
+        #dplyr::filter(is.na(`param_domain_type`)) %>%
+        tidyr::drop_na(dplyr::if_any("param_domain_type")) %>%
         dplyr::distinct() %>%
         dplyr::rename(calculation = formula,
                       unique_id = name,
