@@ -33,7 +33,7 @@ raw_fields_overview <- function(twb_file) {
         janitor::clean_names() %>%
         dplyr::distinct() %>%
         dplyr::filter(!is.na(role)) %>%
-        dplyr::filter(is.na(hidden)) %>%
+ #       dplyr::filter(is.na(hidden)) %>%  # need a way to check it before using
         dplyr::mutate(has_alias = dplyr::case_when(
             is.na(caption) ~ FALSE,
             TRUE ~ TRUE
@@ -108,7 +108,7 @@ other_created_overview <- function(twb_file){
         dplyr::bind_cols(all_created_calcs) %>%
         janitor::clean_names() %>%
         dplyr::select(-which(names(.) == 'folder_name')) %>%
-        dplyr::filter(is.na(unnamed))
+        #dplyr::filter(is.na(unnamed))  # need to find a way to test if it exists before using it
 
 
     #separate in to parameters and other
