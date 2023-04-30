@@ -29,6 +29,7 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
 raw_fields_overview <- function(twb_file) {
     # All raw fields ----
     # remove any duplicates and keep those with a "role", keep visible and update named column
+
     all_raw_fields <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@name) and not (.//calculation)]") %>%
         janitor::clean_names() %>%
         dplyr::distinct() %>%
@@ -85,6 +86,9 @@ parameters_overview <- function(twb_file){
         )
 
     #separate in to parameters and other
+
+    lookup <- c(unique_id = "name", name = "caption", default_value_text = "alias", default_value = "value")
+
     all_param <- all_created %>%
         dplyr::filter(
             dplyr::if_any(
@@ -93,11 +97,7 @@ parameters_overview <- function(twb_file){
             )
         ) %>%
         dplyr::distinct() %>%
-        dplyr::rename(unique_id = name,
-                      name = caption,
-                      default_value_text = alias,
-                      default_value = value)
-
+        dplyr::rename(dplyr::any_of(lookup))
 }
 
 #' List of other fields created in tableau
@@ -132,6 +132,8 @@ other_created_overview <- function(twb_file){
         )
 
 
+    lookup <- c(unique_id = "name", name = "caption", default_value_text = "alias", default_value = "value")
+
     #separate in to parameters and other
     all_param <- all_created %>%
         dplyr::filter(
@@ -141,10 +143,7 @@ other_created_overview <- function(twb_file){
             )
         ) %>%
         dplyr::distinct() %>%
-        dplyr::rename(unique_id = name,
-                      name = caption,
-                      default_value_text = alias,
-                      default_value = value)
+        dplyr::rename(dplyr::any_of(lookup))
 
     all_other <- all_created %>%
         dplyr::filter(
@@ -155,9 +154,7 @@ other_created_overview <- function(twb_file){
         ) %>%
 
         dplyr::distinct() %>%
-        dplyr::rename(calculation = formula,
-                      unique_id = name,
-                      name = caption)
+        dplyr::rename(dplyr::any_of(lookup))
 
 
     ## create a list of all unique_id and friendly_names from param and calc list ----
