@@ -184,27 +184,3 @@ other_created_overview <- function(twb_file){
     calcs_only <- all_other
 
 }
-
-#' Create a list consisting of raw fields and calculated fields
-#'
-#' @param twb_file A twb file
-#'
-#' @return A list of raw and calculated fields from the tableau workbook
-#' @export
-#'
-#' @examples
-#'  \dontrun{
-#'    create_dd(twb_file = "test.xml")
-#' }
-
-create_dd <- function(twb_file){
-    all_other <- other_created_overview(twb_file) %>%
-        dplyr::select(name, datatype, role, type, default_format, aggregation, calculation)
-
-    all_raw_fields <- raw_fields_overview(twb_file) %>%
-        dplyr::select(name, datatype, role, type, default_format, aggregation,
-                      semantic_role, has_alias, original_name)
-
-    dd <- all_raw_fields %>%
-        dplyr::bind_rows(all_other)
-}
