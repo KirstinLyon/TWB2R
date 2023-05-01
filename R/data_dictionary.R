@@ -30,6 +30,8 @@ raw_fields_overview <- function(twb_file) {
     # All raw fields ----
     # remove any duplicates and keep those with a "role", keep visible and update named column
 
+    lookup <- c(original_name = "name", name = "caption")
+
     all_raw_fields <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@name) and not (.//calculation)]") %>%
         janitor::clean_names() %>%
         dplyr::distinct() %>%
@@ -41,16 +43,17 @@ raw_fields_overview <- function(twb_file) {
             )
         ) %>%
 
-        dplyr::mutate(has_alias = dplyr::case_when(
-            is.na(caption) ~ FALSE,
-            TRUE ~ TRUE
-        )) %>%
-        dplyr::mutate(caption = dplyr::case_when(
-            is.na(caption) ~ stringr::str_replace_all(name, "[\\[|\\]]", ""),
-            TRUE ~ caption
-        )) %>%
-        dplyr::rename(original_name = name,
-                      name = caption)
+        dplyr::mutate(name = stringr::str_replace_all(name, "[\\[|\\]]", "")) %>%
+        dplyr::mutate(caption = if("caption" %in% colnames(.))
+            dplyr::case_when(is.na(caption) ~ name , TRUE ~ caption)
+            else NULL
+
+        ) %>%
+        dplyr::mutate(has_alias = if("caption" %in% colnames(.))
+            dplyr::case_when(caption == name ~ FALSE, TRUE ~ TRUE)
+            else NULL
+        ) %>%
+        dplyr::rename(dplyr::any_of(lookup))
 }
 
 
