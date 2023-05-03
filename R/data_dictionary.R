@@ -30,31 +30,41 @@ raw_fields_overview <- function(twb_file) {
     # All raw fields ----
     # remove any duplicates and keep those with a "role", keep visible and update named column
 
-    lookup <- c(original_name = "name", name = "caption")
+    tryCatch(
+        {
 
-    all_raw_fields <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@name) and not (.//calculation)]") %>%
-        janitor::clean_names() %>%
-        dplyr::distinct() %>%
-        dplyr::filter(!is.na(role)) %>%
-        dplyr::filter(
-            dplyr::if_any(
-                .cols = dplyr::any_of("hidden"),
-                .fns = ~is.na(.x)
-            )
-        ) %>%
 
-        dplyr::mutate(name = stringr::str_replace_all(name, "[\\[|\\]]", "")) %>%
-        dplyr::mutate(caption = if("caption" %in% colnames(.))
-            dplyr::case_when(is.na(caption) ~ name , TRUE ~ caption)
-            else NULL
+            lookup <- c(original_name = "name", name = "caption")
 
-        ) %>%
-        dplyr::mutate(has_alias = if("caption" %in% colnames(.))
-            dplyr::case_when(caption == name ~ FALSE, TRUE ~ TRUE)
-            else NULL
-        ) %>%
-        dplyr::rename(dplyr::any_of(lookup)) %>%
-        janitor::remove_empty(which = "cols")
+            all_raw_fields <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@name) and not (.//calculation)]") %>%
+                janitor::clean_names() %>%
+                dplyr::distinct() %>%
+                dplyr::filter(!is.na(role)) %>%
+                dplyr::filter(
+                    dplyr::if_any(
+                        .cols = dplyr::any_of("hidden"),
+                        .fns = ~is.na(.x)
+                    )
+                ) %>%
+
+                dplyr::mutate(name = stringr::str_replace_all(name, "[\\[|\\]]", "")) %>%
+                dplyr::mutate(caption = if("caption" %in% colnames(.))
+                    dplyr::case_when(is.na(caption) ~ name , TRUE ~ caption)
+                    else NULL
+
+                ) %>%
+                dplyr::mutate(has_alias = if("caption" %in% colnames(.))
+                    dplyr::case_when(caption == name ~ FALSE, TRUE ~ TRUE)
+                    else NULL
+                ) %>%
+                dplyr::rename(dplyr::any_of(lookup)) %>%
+                janitor::remove_empty(which = "cols")
+                },
+
+        error = function(e){
+            message("TWB file does not exist")
+        }
+    )
 }
 
 
