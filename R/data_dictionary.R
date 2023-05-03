@@ -159,7 +159,8 @@ other_created_overview <- function(twb_file){
         ) %>%
 
         dplyr::distinct() %>%
-        dplyr::rename(dplyr::any_of(lookup))
+        dplyr::rename(dplyr::any_of(lookup)) %>%
+        janitor::remove_empty(which = "cols")
 
 
     ## create a list of all unique_id and friendly_names from param and calc list ----
@@ -183,7 +184,6 @@ other_created_overview <- function(twb_file){
     all_other$formula <- stringr::str_replace_all(all_other$formula,
                                                       pattern = stringr::fixed(pattern_vector))
 
-    calcs_only <- all_other %>%
-        janitor::remove_empty(which = "cols")
+    calcs_only <- all_other
 
 }
