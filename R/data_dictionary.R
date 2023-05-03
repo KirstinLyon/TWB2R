@@ -181,9 +181,9 @@ other_created_overview <- function(twb_file){
 
     pattern_vector <- stats::setNames(all_name$name, all_name$unique_id)
     all_other$formula <- stringr::str_replace_all(all_other$formula,
-                                                      pattern = stringr::fixed(pattern_vector)) %>%
-        janitor::remove_empty(which = "cols")
+                                                      pattern = stringr::fixed(pattern_vector))
 
-    calcs_only <- all_other
+    calcs_only <- all_other %>%
+        janitor::remove_empty(which = "cols")
 
 }
