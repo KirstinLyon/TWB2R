@@ -15,7 +15,7 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
             return(test_xml)
         },
         error = function(e){
-            message("doesn't exist")
+            message("This type of created field does not exist in your TWB file.")
             return()
         }
     )
@@ -39,34 +39,31 @@ raw_fields_overview <- function(twb_file) {
     # All raw fields ----
     # remove any duplicates and keep those with a "role", keep visible and update named column
 
+    lookup <- c(original_name = "name", name = "caption")
 
+    all_raw_fields <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@name) and not (.//calculation)]") %>%
+        janitor::clean_names() %>%
+        dplyr::distinct() %>%
+        dplyr::filter(!is.na(role)) %>%
+        dplyr::filter(
+            dplyr::if_any(
+                .cols = dplyr::any_of("hidden"),
+                .fns = ~is.na(.x)
+            )
+        ) %>%
 
+        dplyr::mutate(name = stringr::str_replace_all(name, "[\\[|\\]]", "")) %>%
+        dplyr::mutate(caption = if("caption" %in% colnames(.))
+            dplyr::case_when(is.na(caption) ~ name , TRUE ~ caption)
+            else NULL
 
-            lookup <- c(original_name = "name", name = "caption")
-
-            all_raw_fields <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@name) and not (.//calculation)]") %>%
-                janitor::clean_names() %>%
-                dplyr::distinct() %>%
-                dplyr::filter(!is.na(role)) %>%
-                dplyr::filter(
-                    dplyr::if_any(
-                        .cols = dplyr::any_of("hidden"),
-                        .fns = ~is.na(.x)
-                    )
-                ) %>%
-
-                dplyr::mutate(name = stringr::str_replace_all(name, "[\\[|\\]]", "")) %>%
-                dplyr::mutate(caption = if("caption" %in% colnames(.))
-                    dplyr::case_when(is.na(caption) ~ name , TRUE ~ caption)
-                    else NULL
-
-                ) %>%
-                dplyr::mutate(has_alias = if("caption" %in% colnames(.))
-                    dplyr::case_when(caption == name ~ FALSE, TRUE ~ TRUE)
-                    else NULL
-                ) %>%
-                dplyr::rename(dplyr::any_of(lookup)) %>%
-                janitor::remove_empty(which = "cols")
+        ) %>%
+        dplyr::mutate(has_alias = if("caption" %in% colnames(.))
+            dplyr::case_when(caption == name ~ FALSE, TRUE ~ TRUE)
+            else NULL
+        ) %>%
+        dplyr::rename(dplyr::any_of(lookup)) %>%
+        janitor::remove_empty(which = "cols")
 
 }
 
@@ -87,39 +84,34 @@ raw_fields_overview <- function(twb_file) {
 parameters_overview <- function(twb_file){
 
 
-            #All created fields ---------------------
-            #pull out all data - first calc attributes, and then calculations attributes from the calc fields.  This is both calcs and param
-            all_created_cols <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@caption) and .//calculation]")
-            all_created_calcs <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@caption)]//calculation")
+    #All created fields ---------------------
+    #pull out all data - first calc attributes, and then calculations attributes from the calc fields.  This is both calcs and param
+    all_created_cols <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@caption) and .//calculation]")
+    all_created_calcs <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@caption)]//calculation")
 
-            #combine created fields together and remove unnamed
-            all_created <- all_created_cols %>%
-                dplyr::bind_cols(all_created_calcs) %>%
-                janitor::clean_names() %>%
-                dplyr::select(-which(names(.) == 'folder_name')) %>%
-                dplyr::filter(
-                    dplyr::if_any(
-                        .cols = dplyr::any_of("unnamed"),
-                        .fns = ~is.na(.x)
-                    )
-                )
+    #combine created fields together and remove unnamed
+    all_created <- all_created_cols %>%
+        dplyr::bind_cols(all_created_calcs) %>%
+        janitor::clean_names() %>%
+        dplyr::select(-which(names(.) == 'folder_name')) %>%
+        dplyr::filter(
+            dplyr::if_any(
+                .cols = dplyr::any_of("unnamed"),
+                .fns = ~is.na(.x)
+            )
+        )%>%
+        dplyr::mutate(col_type = if ("param_domain_type" %in% colnames(.))
+            dplyr::case_when(is.na(param_domain_type) ~ 'other_created', TRUE ~ "parameter")
+            else "other_created")
 
-            #separate in to parameters and other
-            lookup <- c(unique_id = "name", name = "caption", default_value_text = "alias", default_value = "value")
+    #separate in to parameters and other
+    lookup <- c(unique_id = "name", name = "caption", default_value_text = "alias", default_value = "value")
 
-            all_param <- all_created %>%
-                dplyr::filter(
-                    dplyr::if_any(
-                        .cols = dplyr::any_of("param_domain_type"),
-                        .fns = ~ !is.na(.x)
-                    )
-                ) %>%
-                dplyr::distinct() %>%
-                dplyr::rename(dplyr::any_of(lookup)) %>%
-                janitor::remove_empty(which = "cols")
-
-
-
+    all_param <- all_created %>%
+        dplyr::filter(col_type == "parameter") %>%
+        dplyr::distinct() %>%
+        dplyr::rename(dplyr::any_of(lookup)) %>%
+        janitor::remove_empty(which = "cols")
 
 }
 
@@ -152,40 +144,42 @@ other_created_overview <- function(twb_file){
                 .cols = dplyr::any_of("unnamed"),
                 .fns = ~is.na(.x)
             )
-        )
+        )%>%
+        dplyr::mutate(col_type = if ("param_domain_type" %in% colnames(.))
+            dplyr::case_when(is.na(param_domain_type) ~ 'other_created', TRUE ~ "parameter")
+            else "other_created")
 
 
     lookup <- c(unique_id = "name", name = "caption", default_value_text = "alias", default_value = "value")
 
     #separate in to parameters and other
     all_param <- all_created %>%
-        dplyr::filter(
-            dplyr::if_any(
-                .cols = dplyr::any_of("param_domain_type"),
-                .fns = ~ !is.na(.x)
-            )
-        ) %>%
+        dplyr::filter(col_type == "parameter") %>%
         dplyr::distinct() %>%
         dplyr::rename(dplyr::any_of(lookup))
 
     all_other <- all_created %>%
-        dplyr::filter(
-            dplyr::if_any(
-                .cols = dplyr::any_of("param_domain_type"),
-                .fns = ~is.na(.x)
-            )
-        ) %>%
-
+        dplyr::filter(col_type == "other_created") %>%
         dplyr::distinct() %>%
         dplyr::rename(dplyr::any_of(lookup)) %>%
         janitor::remove_empty(which = "cols")
 
 
     ## create a list of all unique_id and friendly_names from param and calc list ----
-    param_name <- all_param %>%
-        dplyr::select(name, unique_id)
+    param_name <- all_param
 
-    other_name <- all_other %>%
+    tryCatch(
+        {
+            param_name <- param_name %>%
+                dplyr::select(name, unique_id)
+        },
+        error = function(e){
+            message("No parameters exist")
+            return(NA)
+        }
+    )
+
+     other_name <- all_other %>%
         dplyr::select(name, unique_id)
 
 
@@ -200,7 +194,7 @@ other_created_overview <- function(twb_file){
 
     pattern_vector <- stats::setNames(all_name$name, all_name$unique_id)
     all_other$formula <- stringr::str_replace_all(all_other$formula,
-                                                      pattern = stringr::fixed(pattern_vector))
+                                                  pattern = stringr::fixed(pattern_vector))
 
     calcs_only <- all_other
 
