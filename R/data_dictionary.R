@@ -53,7 +53,8 @@ raw_fields_overview <- function(twb_file) {
             dplyr::case_when(caption == name ~ FALSE, TRUE ~ TRUE)
             else NULL
         ) %>%
-        dplyr::rename(dplyr::any_of(lookup))
+        dplyr::rename(dplyr::any_of(lookup)) %>%
+        janitor::remove_empty(which = "cols")
 }
 
 
@@ -100,7 +101,8 @@ parameters_overview <- function(twb_file){
             )
         ) %>%
         dplyr::distinct() %>%
-        dplyr::rename(dplyr::any_of(lookup))
+        dplyr::rename(dplyr::any_of(lookup)) %>%
+        janitor::remove_empty(which = "cols")
 }
 
 #' List of other fields created in tableau
@@ -179,7 +181,8 @@ other_created_overview <- function(twb_file){
 
     pattern_vector <- stats::setNames(all_name$name, all_name$unique_id)
     all_other$formula <- stringr::str_replace_all(all_other$formula,
-                                                      pattern = stringr::fixed(pattern_vector))
+                                                      pattern = stringr::fixed(pattern_vector)) %>%
+        janitor::remove_empty(which = "cols")
 
     calcs_only <- all_other
 
