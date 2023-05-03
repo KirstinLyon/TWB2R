@@ -82,37 +82,47 @@ raw_fields_overview <- function(twb_file) {
 
 
 parameters_overview <- function(twb_file){
-    #All created fields ---------------------
-    #pull out all data - first calc attributes, and then calculations attributes from the calc fields.  This is both calcs and param
-    all_created_cols <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@caption) and .//calculation]")
-    all_created_calcs <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@caption)]//calculation")
 
-    #combine created fields together and remove unnamed
-    all_created <- all_created_cols %>%
-        dplyr::bind_cols(all_created_calcs) %>%
-        janitor::clean_names() %>%
-        dplyr::select(-which(names(.) == 'folder_name')) %>%
-        dplyr::filter(
-            dplyr::if_any(
-                .cols = dplyr::any_of("unnamed"),
-                .fns = ~is.na(.x)
-            )
-        )
+    tryCatch(
+        {
+            #All created fields ---------------------
+            #pull out all data - first calc attributes, and then calculations attributes from the calc fields.  This is both calcs and param
+            all_created_cols <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@caption) and .//calculation]")
+            all_created_calcs <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@caption)]//calculation")
 
-    #separate in to parameters and other
+            #combine created fields together and remove unnamed
+            all_created <- all_created_cols %>%
+                dplyr::bind_cols(all_created_calcs) %>%
+                janitor::clean_names() %>%
+                dplyr::select(-which(names(.) == 'folder_name')) %>%
+                dplyr::filter(
+                    dplyr::if_any(
+                        .cols = dplyr::any_of("unnamed"),
+                        .fns = ~is.na(.x)
+                    )
+                )
 
-    lookup <- c(unique_id = "name", name = "caption", default_value_text = "alias", default_value = "value")
+            #separate in to parameters and other
+            lookup <- c(unique_id = "name", name = "caption", default_value_text = "alias", default_value = "value")
 
-    all_param <- all_created %>%
-        dplyr::filter(
-            dplyr::if_any(
-                .cols = dplyr::any_of("param_domain_type"),
-                .fns = ~ !is.na(.x)
-            )
-        ) %>%
-        dplyr::distinct() %>%
-        dplyr::rename(dplyr::any_of(lookup)) %>%
-        janitor::remove_empty(which = "cols")
+            all_param <- all_created %>%
+                dplyr::filter(
+                    dplyr::if_any(
+                        .cols = dplyr::any_of("param_domain_type"),
+                        .fns = ~ !is.na(.x)
+                    )
+                ) %>%
+                dplyr::distinct() %>%
+                dplyr::rename(dplyr::any_of(lookup)) %>%
+                janitor::remove_empty(which = "cols")
+        },
+        error = function(e){
+            message("No parameters in TWB file.")
+        }
+    )
+
+
+
 }
 
 #' List of other fields created in tableau
