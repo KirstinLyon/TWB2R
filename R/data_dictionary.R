@@ -8,9 +8,18 @@
 #'
 convert_cols_xml_to_tbl <- function(data,twb_xpath){
 
-    test    <- xml2::xml_find_all(data, xpath = twb_xpath)
-    test_xml <- purrr::map(xml2::xml_attrs(test), base::as.list) %>% purrr::reduce(dplyr::bind_rows)
-    return(test_xml)
+    tryCatch(
+        {
+            test    <- xml2::xml_find_all(data, xpath = twb_xpath)
+            test_xml <- purrr::map(xml2::xml_attrs(test), base::as.list) %>% purrr::reduce(dplyr::bind_rows)
+            return(test_xml)
+        },
+        error = function(e){
+            message("doesn't exist")
+            return()
+        }
+    )
+
 }
 
 
@@ -30,8 +39,7 @@ raw_fields_overview <- function(twb_file) {
     # All raw fields ----
     # remove any duplicates and keep those with a "role", keep visible and update named column
 
-    tryCatch(
-        {
+
 
 
             lookup <- c(original_name = "name", name = "caption")
@@ -59,12 +67,7 @@ raw_fields_overview <- function(twb_file) {
                 ) %>%
                 dplyr::rename(dplyr::any_of(lookup)) %>%
                 janitor::remove_empty(which = "cols")
-                },
 
-        error = function(e){
-            message("TWB file does not exist")
-        }
-    )
 }
 
 
@@ -83,8 +86,7 @@ raw_fields_overview <- function(twb_file) {
 
 parameters_overview <- function(twb_file){
 
-    tryCatch(
-        {
+
             #All created fields ---------------------
             #pull out all data - first calc attributes, and then calculations attributes from the calc fields.  This is both calcs and param
             all_created_cols <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@caption) and .//calculation]")
@@ -115,11 +117,7 @@ parameters_overview <- function(twb_file){
                 dplyr::distinct() %>%
                 dplyr::rename(dplyr::any_of(lookup)) %>%
                 janitor::remove_empty(which = "cols")
-        },
-        error = function(e){
-            message("No parameters in TWB file.")
-        }
-    )
+
 
 
 
