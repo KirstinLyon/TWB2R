@@ -16,7 +16,8 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
         },
         error = function(e){
             message("This type of created field does not exist in your TWB file.")
-            return()
+            stop()
+            #return()
         }
     )
 
@@ -162,7 +163,7 @@ other_created_overview <- function(twb_file){
         dplyr::filter(col_type == "other_created") %>%
         dplyr::distinct() %>%
         dplyr::rename(dplyr::any_of(lookup)) %>%
-        janitor::remove_empty(which = "cols")
+        janitor::remove_empty(which = "cols") # remove cols that have everything that is null
 
 
     ## create a list of all unique_id and friendly_names from param and calc list ----
