@@ -116,6 +116,8 @@ parameters_overview <- function(twb_file){
         janitor::remove_empty(which = "cols") %>%
         dplyr::select(-col_type)
 
+    print("hello")
+
 }
 
 #' List of other fields created in tableau
