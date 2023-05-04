@@ -113,7 +113,8 @@ parameters_overview <- function(twb_file){
         dplyr::filter(col_type == "parameter") %>%
         dplyr::distinct() %>%
         dplyr::rename(dplyr::any_of(lookup)) %>%
-        janitor::remove_empty(which = "cols")
+        janitor::remove_empty(which = "cols") %>%
+        dplyr::select(-col_type)
 
 }
 
@@ -189,6 +190,8 @@ other_created_overview <- function(twb_file){
     all_name <- other_name %>%
         dplyr::bind_rows(param_name) %>%
         dplyr::mutate(unique_id = stringr::str_replace_all(unique_id, "[\\[|\\]]", ""))
+
+
 
 
     ## swapping in the right name ----
