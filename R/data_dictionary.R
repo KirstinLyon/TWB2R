@@ -16,8 +16,9 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
         },
         error = function(e){
             message("This type of created field does not exist in your TWB file.")
-            stop()
             #return()
+            stop()
+
         }
     )
 
@@ -185,8 +186,8 @@ other_created_overview <- function(twb_file){
 
 
     # This is the list of user and friendly names
-    all_name <- param_name %>%
-        dplyr::bind_rows(other_name) %>%
+    all_name <- other_name %>%
+        dplyr::bind_rows(param_name) %>%
         dplyr::mutate(unique_id = stringr::str_replace_all(unique_id, "[\\[|\\]]", ""))
 
 
