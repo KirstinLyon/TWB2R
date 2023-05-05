@@ -16,8 +16,8 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
         },
         error = function(e){
             message("This type of created field does not exist in your TWB file.")
-            #return()
-            stop()
+            return(NULL)
+            #stop()
 
         }
     )
@@ -114,7 +114,7 @@ parameters_overview <- function(twb_file){
         dplyr::distinct() %>%
         dplyr::rename(dplyr::any_of(lookup)) %>%
         janitor::remove_empty(which = "cols") %>%
-        dplyr::select(-col_type)
+        dplyr::select(-which(names(.) == 'col_type'))
 
 }
 
@@ -186,7 +186,7 @@ other_created_overview <- function(twb_file){
         dplyr::select(name, unique_id)
 
 
-    # This is the list of user and friendly names
+    # This is the list of user and friendly names - use if/else
     all_name <- other_name %>%
         dplyr::bind_rows(param_name) %>%
         dplyr::mutate(unique_id = stringr::str_replace_all(unique_id, "[\\[|\\]]", ""))
