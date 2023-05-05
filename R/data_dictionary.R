@@ -15,9 +15,7 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
             return(test_xml)
         },
         error = function(e){
-            message("This type of created field does not exist in your TWB file.")
-            return(NULL)
-            #stop()
+            stop("This type of created field does not exist in your TWB file.")
 
         }
     )
@@ -106,6 +104,7 @@ parameters_overview <- function(twb_file){
             dplyr::case_when(is.na(param_domain_type) ~ 'other_created', TRUE ~ "parameter")
             else "other_created")
 
+
     #separate in to parameters and other
     lookup <- c(unique_id = "name", name = "caption", default_value_text = "alias", default_value = "value")
 
@@ -186,7 +185,7 @@ other_created_overview <- function(twb_file){
         dplyr::select(name, unique_id)
 
 
-    # This is the list of user and friendly names - use if/else
+    # This is the list of user and friendly names
     all_name <- other_name %>%
         dplyr::bind_rows(param_name) %>%
         dplyr::mutate(unique_id = stringr::str_replace_all(unique_id, "[\\[|\\]]", ""))
