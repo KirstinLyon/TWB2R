@@ -16,7 +16,6 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
         },
         error = function(e){
             stop("This type of created field does not exist in your TWB file.")
-
         }
     )
 
@@ -113,7 +112,7 @@ parameters_overview <- function(twb_file){
         dplyr::distinct() %>%
         dplyr::rename(dplyr::any_of(lookup)) %>%
         janitor::remove_empty(which = "cols") %>%
-        dplyr::select(-which(names(.) == 'col_type'))
+        #dplyr::select(-which(names(.) == 'col_type'))
 
 }
 
