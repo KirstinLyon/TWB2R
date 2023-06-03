@@ -17,7 +17,7 @@ Tibble of all dashboards, worksheets and storyboards
 }
 \examples{
  \dontrun{
-   other_created_overview(twb_file = "test.xml")
+   all_windows(twb_file = "test.xml")
 }
 
 }

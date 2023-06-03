@@ -31,10 +31,10 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
 #'
 #' @examples
 #'  \dontrun{
-#'    raw_fields_overview(twb_file = "test.xml")
+#'    all_raw_fields(twb_file = "test.xml")
 #' }
 
-raw_fields_overview <- function(twb_file) {
+all_raw_fields <- function(twb_file) {
     # All raw fields ----
     # remove any duplicates and keep those with a "role", keep visible and update named column
 
@@ -76,11 +76,11 @@ raw_fields_overview <- function(twb_file) {
 #'
 #' @examples
 #'  \dontrun{
-#'    parameters_overview(twb_file = "test.xml")
+#'    all_parameters(twb_file = "test.xml")
 #' }
 
 
-parameters_overview <- function(twb_file){
+all_parameters <- function(twb_file){
 
 
     #All created fields ---------------------
@@ -124,11 +124,11 @@ parameters_overview <- function(twb_file){
 #'
 #' @examples
 #'  \dontrun{
-#'    other_created_overview(twb_file = "test.xml")
+#'    all_other_created(twb_file = "test.xml")
 #' }
 
 
-other_created_overview <- function(twb_file){
+all_other_created <- function(twb_file){
     #All created fields ---------------------
     #pull out all data - first calc attributes, and then calculations attributes from the calc fields.  This is both calcs and param
     all_created_cols <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@caption) and .//calculation]")
@@ -212,11 +212,29 @@ other_created_overview <- function(twb_file){
 #'
 #' @examples
 #'  \dontrun{
-#'    other_created_overview(twb_file = "test.xml")
+#'    all_windows(twb_file = "test.xml")
 #' }
 #'
 all_windows <- function(twb_file){
     all_windows <- convert_cols_xml_to_tbl(twb_file, "//window") %>%
         dplyr::select(-c(hidden, maximized))
 
+}
+
+
+#' Tibble of all datasources connected to workbook
+#'
+#' @param twb_file a Tableau twb file
+#'
+#' @return a tibble of catasources connected to workbook
+#' @export
+#'
+#' @examples
+#'  \dontrun{
+#'    all_datasources(twb_file = "test.xml")
+#' }
+all_datasources <- function(twb_file){
+    datasources <- convert_cols_xml_to_tbl(twb_file, "//named-connection") %>%
+        dplyr::select(-name) %>%
+        dplyr::rename("datasource" = "caption")
 }
