@@ -108,20 +108,11 @@ parameters_overview <- function(twb_file){
     lookup <- c(unique_id = "name", name = "caption", default_value_text = "alias", default_value = "value")
 
     all_param <- all_created %>%
-        tryCatch(
-            {
                 dplyr::filter(col_type == "parameter") %>%
-                    dplyr::distinct() %>%
-                    dplyr::rename(dplyr::any_of(lookup)) %>%
-                    janitor::remove_empty(which = "cols") %>%
-                    dplyr::select(-which(names(.) == 'col_type'))
-            },
-            error =function(e){
-                message("No parameters")
-                return(NA)
-            }
-        )
-
+                dplyr::distinct() %>%
+                dplyr::rename(dplyr::any_of(lookup)) %>%
+                janitor::remove_empty(which = "cols") %>%
+                dplyr::select(-which(names(.) == 'col_type'))
 }
 
 #' List of other fields created in tableau
