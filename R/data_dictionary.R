@@ -233,8 +233,16 @@ all_windows <- function(twb_file){
 #'  \dontrun{
 #'    all_datasources(twb_file = "test.xml")
 #' }
+#'
 all_datasources <- function(twb_file){
-    datasources <- convert_cols_xml_to_tbl(twb_file, "//named-connection") %>%
-        dplyr::select(-name) %>%
-        dplyr::rename("datasource" = "caption")
+    datasources <- convert_cols_xml_to_tbl(twb_file, "//connection") %>%
+        dplyr::filter(!is.na(filename)) %>%
+        dplyr::mutate(directory = dplyr::case_when(is.na(directory) ~ filename,
+                                     TRUE ~ directory),
+                      filename = stringr::word(filename, -1, sep = fixed("/"))) %>%
+        dplyr::select(class, directory, filename)
+
 }
+
+
+
