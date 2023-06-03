@@ -15,7 +15,7 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
             return(test_xml)
         },
         error = function(e){
-            return("This type of created field does not exist in your TWB file.")
+            stop("This type of created field does not exist in your TWB file.")
         }
     )
 
