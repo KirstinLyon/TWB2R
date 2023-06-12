@@ -240,7 +240,8 @@ all_datasources <- function(twb_file){
         dplyr::mutate(directory = dplyr::case_when(is.na(directory) ~ filename,
                                      TRUE ~ directory),
                       filename = stringr::word(filename, -1, sep = fixed("/"))) %>%
-        dplyr::select(class, directory, filename)
+        dplyr::select(class, directory, filename) %>%
+        dplyr::distinct()
 
 }
 
