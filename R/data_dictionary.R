@@ -174,6 +174,7 @@ all_other_created <- function(twb_file){
     all_other$formula <- stringr::str_replace_all(all_other$formula,
                                                   pattern = stringr::fixed(pattern_vector))
 
-    calcs_only <- all_other
+    calcs_only <- all_other %>%
+        dplyr::select(-which(names(.) == 'col_type'))
 
 }
