@@ -1,27 +1,3 @@
-#' Helper function for pulling out information from an xml file using a given xpath
-#'
-#' @param data an xml file
-#' @param twb_xpath the name of the xpath tag
-#'
-#' @return returns wanted xpath fields as a tibble
-#' @export
-#'
-convert_cols_xml_to_tbl <- function(data,twb_xpath){
-
-    tryCatch(
-        {
-            test    <- xml2::xml_find_all(data, xpath = twb_xpath)
-            test_xml <- purrr::map(xml2::xml_attrs(test), base::as.list) %>% purrr::reduce(dplyr::bind_rows)
-            return(test_xml)
-        },
-        error = function(e){
-            stop("This type of created field does not exist in your TWB file.")
-        }
-    )
-
-}
-
-
 #' Create an overview of all visible fields from a twb file
 #'
 #' @param twb_file an XML file generated from a twb
@@ -201,49 +177,3 @@ all_other_created <- function(twb_file){
     calcs_only <- all_other
 
 }
-
-
-#' Tibble of all dashboards, worksheets and storyboards
-#'
-#' @param twb_file a Tableau TWB file
-#'
-#' @return a tibble with a list of dashboards, worksheets and storyboards
-#' @export
-#'
-#' @examples
-#'  \dontrun{
-#'    all_windows(twb_file = "test.xml")
-#' }
-#'
-all_windows <- function(twb_file){
-    all_windows <- convert_cols_xml_to_tbl(twb_file, "//window") %>%
-        dplyr::select(-c(hidden, maximized))
-
-}
-
-
-#' Tibble of all datasources connected to workbook
-#'
-#' @param twb_file a Tableau twb file
-#'
-#' @return a tibble of catasources connected to workbook
-#' @export
-#'
-#' @examples
-#'  \dontrun{
-#'    all_datasources(twb_file = "test.xml")
-#' }
-#'
-all_datasources <- function(twb_file){
-    datasources <- convert_cols_xml_to_tbl(twb_file, "//connection") %>%
-        dplyr::filter(!is.na(filename)) %>%
-        dplyr::mutate(directory = dplyr::case_when(is.na(directory) ~ filename,
-                                     TRUE ~ directory),
-                      filename = stringr::word(filename, -1, sep = fixed("/"))) %>%
-        dplyr::select(class, directory, filename) %>%
-        dplyr::distinct()
-
-}
-
-
-
