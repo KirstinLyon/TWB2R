@@ -20,13 +20,6 @@ all_raw_fields <- function(twb_file) {
         janitor::clean_names() %>%
         dplyr::distinct() %>%
         dplyr::filter(!is.na(role)) %>%
-        dplyr::filter(
-            dplyr::if_any(
-                .cols = dplyr::any_of("hidden"),
-                .fns = ~is.na(.x)
-            )
-        ) %>%
-
         dplyr::mutate(name = stringr::str_replace_all(name, "[\\[|\\]]", "")) %>%
         dplyr::mutate(caption = if("caption" %in% colnames(.))
             dplyr::case_when(is.na(caption) ~ name , TRUE ~ caption)
