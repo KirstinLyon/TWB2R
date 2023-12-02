@@ -44,7 +44,7 @@ Read in a Tableau workbook as XML and view metadata.
 
 ```{r example}
 #Read in tableau twb files  (NB:  unpackage a twbx file to get a twb)
-twb_file <- read_xml("Data/tableau_workbook_example.twb")
+twb_file <- read_xml("inst/extdata/Data/tableau_example_workbook.twb")
 
 #Extract the meta-data for fields using TWB2R
 all_datasources <- TWB2R::all_datasources(twb_file) #All datasources connected to the workbook
