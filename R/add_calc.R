@@ -26,7 +26,7 @@ create_calc <- function(twb_file, file_location,caption, datatype,
 
     if(name_check == FALSE){
 
-        datasource_nodes <- xml2::xml_find_all(file, "//datasources/datasource")
+        datasource_nodes <- xml2::xml_find_all(twb_file, "//datasources/datasource")
 
         new_tag <- xml2::xml_add_child(datasource_nodes[[1]], "column")
         child <- xml2::xml_add_child(new_tag, "calculation")
