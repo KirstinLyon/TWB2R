@@ -20,22 +20,33 @@
 create_calc <- function(twb_file, file_location,caption, datatype,
                         role, type, class = "Tableau", formula ){
 
+    temp_file <- twb_file
+    name_check <- TWB2R::check_name(twb_file, caption)
 
-    datasource_nodes <- xml2::xml_find_all(file, "//datasources/datasource")
 
-    new_tag <- xml2::xml_add_child(datasource_nodes[[1]], "column")
-    child <- xml2::xml_add_child(new_tag, "calculation")
-    xml2::xml_set_attr(new_tag, "caption", caption)
-    xml2::xml_set_attr(new_tag, "datatype", datatype)
-    xml2::xml_set_attr(new_tag, "name", "[Calculation_1097752430143991829]")
-    xml2::xml_set_attr(new_tag, "role", role)
-    xml2::xml_set_attr(new_tag, "type", type)
+    if(name_check == FALSE){
 
-    xml2::xml_set_attr(child, "class", class)
-    xml2::xml_set_attr(child, "formula", formula)
+        datasource_nodes <- xml2::xml_find_all(file, "//datasources/datasource")
 
-    xml2::write_xml(twb_file, file_location)
+        new_tag <- xml2::xml_add_child(datasource_nodes[[1]], "column")
+        child <- xml2::xml_add_child(new_tag, "calculation")
+        xml2::xml_set_attr(new_tag, "caption", caption)
+        xml2::xml_set_attr(new_tag, "datatype", datatype)
+        xml2::xml_set_attr(new_tag, "name", "[Calculation_1097752430143991829]")
+        xml2::xml_set_attr(new_tag, "role", role)
+        xml2::xml_set_attr(new_tag, "type", type)
 
-    return(twb_file)
+        xml2::xml_set_attr(child, "class", class)
+        xml2::xml_set_attr(child, "formula", formula)
+
+        xml2::write_xml(twb_file, file_location)
+
+    }
+
+    else{
+        error <- "Name already exists"
+    }
+
+    return(temp_file)
 
 }

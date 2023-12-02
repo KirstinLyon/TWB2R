@@ -50,12 +50,14 @@ check_name <- function(twb_file, a_name){
 
     all_tbl <- list(all_calc_names, all_param_names, all_raw_names)
     all_names <- purrr::compact(all_tbl) %>%
-        purrr::reduce(bind_rows, .init = tibble()) %>%
+        purrr::reduce(dplyr::bind_rows, .init = dplyr::tibble()) %>%
         dplyr::select(name) %>%
         dplyr::pull()
 
     return (a_name %in% all_names)
 }
+
+
 
 #' create unique ID for the calculation.
 #'
