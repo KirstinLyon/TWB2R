@@ -40,21 +40,19 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
 check_name <- function(twb_file, a_name){
 
     all_calc_names <- twb_file %>%
-        TWB2R::all_other_created() %>%
-        dplyr::select(name)
+        TWB2R::all_other_created()
 
     all_param_names <- twb_file %>%
-        TWB2R::all_parameters() %>%
-        dplyr::select(name)
+        TWB2R::all_parameters()
 
     all_raw_names <- twb_file %>%
-        TWB2R::all_raw_fields() %>%
-        dplyr::select(name)
+        TWB2R::all_raw_fields()
 
-    all_names <- dplyr::bind_rows(all_calc_names,
-                                  all_param_names,
-                                  all_raw_names) %>%
-        dplyr::pull(name)
+    all_tbl <- list(all_calc_names, all_param_names, all_raw_names)
+    all_names <- purrr::compact(all_tbl) %>%
+        purrr::reduce(bind_rows, .init = tibble()) %>%
+        dplyr::select(name) %>%
+        dplyr::pull()
 
     return (a_name %in% all_names)
 }
