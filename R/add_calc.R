@@ -39,7 +39,7 @@ create_calc <- function(twb_file, file_location,caption, datatype,
         xml2::xml_set_attr(child, "class", class)
         xml2::xml_set_attr(child, "formula", formula)
 
-        xml2::write_xml(twb_file, file_location)
+        xml2::write_xml(temp_file, file_location)
 
     }
 
