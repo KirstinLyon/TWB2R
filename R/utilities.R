@@ -70,9 +70,19 @@ check_name <- function(twb_file, a_name){
 #'  \dontrun{
 #'    create_calc_id(twb_file)
 #' }
+
 create_calc_id <- function(twb_file){
-    all_ids <- twb_file %>%
+    an_id <- twb_file %>%
         TWB2R::all_other_created() %>%
         dplyr::select(unique_id) %>%
-        dplyr::pull(unique_id)
+        dplyr::mutate(unique_id = stringr::str_replace_all(unique_id, "[\\[|\\]]", ""),
+
+                      unique_id = stringr::str_split_i(unique_id, "_", 2)) %>%
+        dplyr::summarise(new_unique_id = max(unique_id)) %>%
+        dplyr::pull()
+
+
+    new_id <- VeryLargeIntegers::as.vli(an_id) + 1
+    return(glue::glue("[Calculation_{new_id}]"))
+
 }
