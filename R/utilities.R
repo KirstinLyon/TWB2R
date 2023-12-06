@@ -5,7 +5,7 @@
 #'
 #' @return returns wanted xpath fields as a tibble
 #' @keywords internal
-#' @export
+
 #' @examples
 #'  \dontrun{
 #'    convert_cols_xml_to_tbl(data; twb_xpath)
@@ -30,10 +30,10 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
 #'
 #' @param twb_file a twb file
 #' @param a_name a name for a calculation
-#'
+#' @export
 #' @return returns TRUE/FALSE depending on if the name exists in the dataset
 #' @keywords internal
-#' @export
+
 #' @examples
 #'  \dontrun{
 #'    check_name(twb_file, a_name)
@@ -41,13 +41,13 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
 check_name <- function(twb_file, a_name){
 
     all_calc_names <- twb_file %>%
-        TWB2R::all_other_created()
+        TWB2R::show_all_other_created()
 
     all_param_names <- twb_file %>%
-        TWB2R::all_parameters()
+        TWB2R::show_all_parameters()
 
     all_raw_names <- twb_file %>%
-        TWB2R::all_raw_fields()
+        TWB2R::show_all_raw_fields()
 
     all_tbl <- list(all_calc_names, all_param_names, all_raw_names)
     all_names <- purrr::compact(all_tbl) %>%
@@ -63,9 +63,9 @@ check_name <- function(twb_file, a_name){
 #' create unique ID for the calculation.
 #'
 #' @param twb_file twb_file
-#'
-#' @return a unique code for a calculation
 #' @export
+#' @return a unique code for a calculation
+
 #' @keywords internal
 #' @examples
 #'  \dontrun{
@@ -74,7 +74,7 @@ check_name <- function(twb_file, a_name){
 
 create_calc_id <- function(twb_file){
     an_id <- twb_file %>%
-        TWB2R::all_other_created() %>%
+        TWB2R::show_all_other_created() %>%
         dplyr::select(unique_id) %>%
         dplyr::mutate(unique_id = stringr::str_replace_all(unique_id, "[\\[|\\]]", ""),
 

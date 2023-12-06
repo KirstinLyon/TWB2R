@@ -10,7 +10,7 @@
 #'    all_raw_fields(twb_file = "test.xml")
 #' }
 
-all_raw_fields <- function(twb_file) {
+show_all_raw_fields <- function(twb_file) {
     # All raw fields ----
     # remove any duplicates and keep those with a "role", keep visible and update named column
 
@@ -49,7 +49,7 @@ all_raw_fields <- function(twb_file) {
 #' }
 
 
-all_parameters <- function(twb_file){
+show_all_parameters <- function(twb_file){
 
 
     #All created fields ---------------------
@@ -97,7 +97,7 @@ all_parameters <- function(twb_file){
 #' }
 
 
-all_other_created <- function(twb_file){
+show_all_other_created <- function(twb_file){
     #All created fields ---------------------
     #pull out all data - first calc attributes, and then calculations attributes from the calc fields.  This is both calcs and param
     all_created_cols <- convert_cols_xml_to_tbl(twb_file, "//column[boolean(@caption) and .//calculation]")

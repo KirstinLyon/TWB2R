@@ -11,7 +11,7 @@
 #'    all_datasources(twb_file = "test.xml")
 #' }
 #'
-all_datasources <- function(twb_file){
+show_all_datasources <- function(twb_file){
     datasources <- convert_cols_xml_to_tbl(twb_file, "//connection") %>%
         dplyr::filter(!is.na(filename)) %>%
         dplyr::mutate(directory = dplyr::case_when(is.na(directory) ~ filename,
