@@ -4,6 +4,7 @@
 #' @param twb_xpath the name of the xpath tag
 #'
 #' @return returns wanted xpath fields as a tibble
+#' @keywords internal
 #' @export
 #' @examples
 #'  \dontrun{
@@ -31,8 +32,8 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
 #' @param a_name a name for a calculation
 #'
 #' @return returns TRUE/FALSE depending on if the name exists in the dataset
+#' @keywords internal
 #' @export
-#'
 #' @examples
 #'  \dontrun{
 #'    check_name(twb_file, a_name)
@@ -65,7 +66,7 @@ check_name <- function(twb_file, a_name){
 #'
 #' @return a unique code for a calculation
 #' @export
-#'
+#' @keywords internal
 #' @examples
 #'  \dontrun{
 #'    create_calc_id(twb_file)

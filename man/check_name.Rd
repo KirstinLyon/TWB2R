@@ -22,3 +22,4 @@ Checks the "caption" created to ensure no duplicates
    check_name(twb_file, a_name)
 }
 }
+\keyword{internal}

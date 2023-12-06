@@ -22,3 +22,4 @@ Helper function for pulling out information from an xml file using a given xpath
    convert_cols_xml_to_tbl(data; twb_xpath)
 }#'
 }
+\keyword{internal}
