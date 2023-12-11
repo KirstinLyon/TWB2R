@@ -6,7 +6,24 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of TWB2R is to …
+The TWB2R package streamlines the extraction of metadata from Tableau
+Workbook (TWB) files. Different use cases include:
+
+    Ensuring uniformity in calculations across multiple workbooks
+    Effortlessly generating a comprehensive data dictionary
+    Creating a user-friendly Table of Contents for workbooks
+    Verifying calculations for potential errors
+    Examining the datasources employed in a workbook
+
+## Preparing a Datasource
+
+The TWB2R package uses a TWB file. If your workbook is saved in the
+Tableau Packaged Workbook (TWBX) format, you can easily retrieve the
+required TWB file by right-clicking on the TWBX file and selecting
+“unpackage” in your file browser. This process grants you direct access
+to the underlying TWB file associated with your workbook. This package
+does not need the files associated with the TWBX file, only the TWB
+file.
 
 ## Installation
 
@@ -37,6 +54,9 @@ library(xml2)
 ```
 
 ## Example
+
+A TWB file is an XML file. There is no need to convert from a TWB to an
+XML in order to use the XML2 package.
 
 Read in a Tableau workbook as XML and view metadata.
 
