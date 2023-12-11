@@ -17,3 +17,9 @@ returns wanted xpath fields as a tibble
 \description{
 Helper function for pulling out information from an xml file using a given xpath
 }
+\examples{
+ \dontrun{
+   convert_cols_xml_to_tbl(data; twb_xpath)
+}#'
+}
+\keyword{internal}
