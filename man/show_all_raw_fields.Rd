@@ -2,21 +2,21 @@
 % Please edit documentation in R/data_dictionary.R
 \name{show_all_raw_fields}
 \alias{show_all_raw_fields}
-\title{Create an overview of all visible fields from a twb file}
+\title{Create an overview of all visible fields from a TWB file}
 \usage{
 show_all_raw_fields(twb_file)
 }
 \arguments{
-\item{twb_file}{an XML file generated from a twb}
+\item{twb_file}{a TWB file}
 }
 \value{
-Returns a tibble with all fields coming from the datasource(s) used in the workbook.
+Returns a tibble of all fields that exist in datasource(s) used in the workbook.
 }
 \description{
-Create an overview of all visible fields from a twb file
+Create an overview of all visible fields from a TWB file
 }
 \examples{
  \dontrun{
-   all_raw_fields(twb_file = "test.xml")
+   all_raw_fields(twb_file = "test.twb")
 }
 }

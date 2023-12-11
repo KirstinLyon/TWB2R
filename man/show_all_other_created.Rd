@@ -2,21 +2,21 @@
 % Please edit documentation in R/data_dictionary.R
 \name{show_all_other_created}
 \alias{show_all_other_created}
-\title{List of other fields created in tableau}
+\title{List of other fields created in tableau (e.g., calculations, bins and groups)}
 \usage{
 show_all_other_created(twb_file)
 }
 \arguments{
-\item{twb_file}{a tableau twb file}
+\item{twb_file}{a TWB file}
 }
 \value{
-list of other created files
+A tibble of other fields created in the workbook
 }
 \description{
-List of other fields created in tableau
+List of other fields created in tableau (e.g., calculations, bins and groups)
 }
 \examples{
  \dontrun{
-   all_other_created(twb_file = "test.xml")
+   all_other_created(twb_file = "test.twb")
 }
 }

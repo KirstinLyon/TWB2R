@@ -1,13 +1,13 @@
-#' Create an overview of all visible fields from a twb file
+#' Create an overview of all visible fields from a TWB file
 #'
-#' @param twb_file an XML file generated from a twb
+#' @param twb_file a TWB file
 #'
-#' @return Returns a tibble with all fields coming from the datasource(s) used in the workbook.
+#' @return Returns a tibble of all fields that exist in datasource(s) used in the workbook.
 #' @export
 #'
 #' @examples
 #'  \dontrun{
-#'    all_raw_fields(twb_file = "test.xml")
+#'    all_raw_fields(twb_file = "test.twb")
 #' }
 
 show_all_raw_fields <- function(twb_file) {
@@ -31,21 +31,27 @@ show_all_raw_fields <- function(twb_file) {
             else NULL
         ) %>%
         dplyr::rename(dplyr::any_of(lookup)) %>%
-        janitor::remove_empty(which = "cols")
+        janitor::remove_empty(which = "cols") %>%
+        dplyr::select(-dplyr::any_of(c("datatype", "role", "type",
+                                "semantic_role"))) %>%
+        dplyr::select(name, original_name, dplyr::everything(.)) %>%
+        dplyr::filter(name != ":Measure Names")
+
+    return(all_raw_fields)
 
 }
 
 
-#' Create overview of parameters
+#' Creates an overview of parameters created in the workbook
 #'
-#' @param twb_file a twb file from tableau
+#' @param twb_file a TWB file
 #'
-#' @return list of parameters
+#' @return Returns a tibble of all parameters created in the workbook.
 #' @export
 #'
 #' @examples
 #'  \dontrun{
-#'    all_parameters(twb_file = "test.xml")
+#'    all_parameters(twb_file = "test.twb")
 #' }
 
 
@@ -81,19 +87,27 @@ show_all_parameters <- function(twb_file){
                 dplyr::distinct() %>%
                 dplyr::rename(dplyr::any_of(lookup)) %>%
                 janitor::remove_empty(which = "cols") %>%
-                dplyr::select(-which(names(.) == 'col_type'))
+                dplyr::select(-which(names(.) == 'col_type')) %>%
+                dplyr::select(-dplyr::any_of(c("datatype", "role", "type",
+                                        "semantic_role", "param_domain_type",
+                                        "default_value", "datatype_customized",
+                                        "class", "formula",
+                                        "fcp_parameter_default_values_true_source_field"))) %>%
+                dplyr::select(name, unique_id, dplyr::everything(.))
+
+    return(all_param)
 }
 
-#' List of other fields created in tableau
+#' List of other fields created in tableau (e.g., calculations, bins and groups)
 #'
-#' @param twb_file a tableau twb file
+#' @param twb_file a TWB file
 #'
-#' @return list of other created files
+#' @return A tibble of other fields created in the workbook
 #' @export
 #'
 #' @examples
 #'  \dontrun{
-#'    all_other_created(twb_file = "test.xml")
+#'    all_other_created(twb_file = "test.twb")
 #' }
 
 
@@ -168,6 +182,11 @@ show_all_other_created <- function(twb_file){
                                                   pattern = stringr::fixed(pattern_vector))
 
     calcs_only <- all_other %>%
-        dplyr::select(-which(names(.) == 'col_type'))
+        dplyr::select(-which(names(.) == 'col_type'))%>%
+        dplyr::select(-dplyr::any_of(c("datatype", "role", "type",
+                                "semantic_role"))) %>%
+        dplyr::select(name, unique_id, dplyr::everything(.))
+
+    return(calcs_only)
 
 }
