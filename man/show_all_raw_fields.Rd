@@ -17,6 +17,6 @@ Create an overview of all visible fields from a TWB file
 }
 \examples{
  \dontrun{
-   all_raw_fields(twb_file = "test.twb")
+  show_all_raw_fields(twb_file = "test.twb")
 }
 }

@@ -7,17 +7,17 @@
 show_all_datasources(twb_file)
 }
 \arguments{
-\item{twb_file}{a Tableau twb file}
+\item{twb_file}{a TWB file}
 }
 \value{
-a tibble of catasources connected to workbook
+a tibble of datasources connected to workbook
 }
 \description{
 Tibble of all datasources connected to workbook
 }
 \examples{
  \dontrun{
-   all_datasources(twb_file = "test.xml")
+   show_all_datasources(twb_file = "test.twb")
 }
 
 }

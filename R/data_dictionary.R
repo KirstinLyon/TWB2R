@@ -7,7 +7,7 @@
 #'
 #' @examples
 #'  \dontrun{
-#'    all_raw_fields(twb_file = "test.twb")
+#'   show_all_raw_fields(twb_file = "test.twb")
 #' }
 
 show_all_raw_fields <- function(twb_file) {
@@ -51,7 +51,7 @@ show_all_raw_fields <- function(twb_file) {
 #'
 #' @examples
 #'  \dontrun{
-#'    all_parameters(twb_file = "test.twb")
+#'    show_all_parameters(twb_file = "test.twb")
 #' }
 
 
@@ -107,7 +107,7 @@ show_all_parameters <- function(twb_file){
 #'
 #' @examples
 #'  \dontrun{
-#'    all_other_created(twb_file = "test.twb")
+#'    show_all_other_created(twb_file = "test.twb")
 #' }
 
 

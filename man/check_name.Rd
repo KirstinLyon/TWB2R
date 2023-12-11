@@ -7,7 +7,7 @@
 check_name(twb_file, a_name)
 }
 \arguments{
-\item{twb_file}{a twb file}
+\item{twb_file}{a TWB file}
 
 \item{a_name}{a name for a calculation}
 }
