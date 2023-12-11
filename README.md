@@ -64,10 +64,15 @@ Read in a Tableau workbook as XML and view metadata.
 #Read in tableau twb files  (NB:  unpackage a twbx file to get a twb)
 twb_file <- read_xml("inst/extdata/Data/tableau_example_workbook.twb")
 
-#Extract the meta-data for fields using TWB2R
+#Extract the individual meta-data for fields using TWB2R
 all_datasources <- TWB2R::show_all_datasources(twb_file) #All datasources connected to the workbook
 all_windows <- TWB2R::show_all_windows(twb_file) #all worksheets, dashboards and storyboards in the workbook
 Raw <- TWB2R::show_all_raw_fields(twb_file) #all fields from the datasets
 calcs <- TWB2R::show_all_other_created(twb_file) #all calculations created in the workbook
 param <- TWB2R::show_all_parameters(twb_file) #all parameters created in the workbook
+
+
+#or extract all meta-data, and then stipulate which data to use
+all_meta_data <- TWB2R::extract_all_metadata(twb_file)
+raw <- TWB2R::get_metadata(all_meta_data, "raw")
 ```

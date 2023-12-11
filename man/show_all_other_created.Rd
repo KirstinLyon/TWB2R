@@ -17,6 +17,6 @@ List of other fields created in tableau (e.g., calculations, bins and groups)
 }
 \examples{
  \dontrun{
-   all_other_created(twb_file = "test.twb")
+   show_all_other_created(twb_file = "test.twb")
 }
 }

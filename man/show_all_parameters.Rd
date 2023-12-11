@@ -17,6 +17,6 @@ Creates an overview of parameters created in the workbook
 }
 \examples{
  \dontrun{
-   all_parameters(twb_file = "test.twb")
+   show_all_parameters(twb_file = "test.twb")
 }
 }

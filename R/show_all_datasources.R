@@ -1,14 +1,14 @@
 
 #' Tibble of all datasources connected to workbook
 #'
-#' @param twb_file a Tableau twb file
+#' @param twb_file a TWB file
 #'
-#' @return a tibble of catasources connected to workbook
+#' @return a tibble of datasources connected to workbook
 #' @export
 #'
 #' @examples
 #'  \dontrun{
-#'    all_datasources(twb_file = "test.xml")
+#'    show_all_datasources(twb_file = "test.twb")
 #' }
 #'
 show_all_datasources <- function(twb_file){

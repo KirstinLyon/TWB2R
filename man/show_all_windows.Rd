@@ -7,7 +7,7 @@
 show_all_windows(twb_file)
 }
 \arguments{
-\item{twb_file}{a Tableau TWB file}
+\item{twb_file}{a WB file}
 }
 \value{
 a tibble with a list of dashboards, worksheets and storyboards
@@ -17,7 +17,7 @@ Tibble of all dashboards, worksheets and storyboards
 }
 \examples{
  \dontrun{
-   all_windows(twb_file = "test.xml")
+   show_all_windows(twb_file = "test.twb")
 }
 
 }

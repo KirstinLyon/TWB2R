@@ -1,6 +1,6 @@
 #' Helper function for pulling out information from an xml file using a given xpath
 #'
-#' @param data an xml file
+#' @param data a TWB file
 #' @param twb_xpath the name of the xpath tag
 #'
 #' @return returns wanted xpath fields as a tibble
@@ -8,13 +8,13 @@
 
 #' @examples
 #'  \dontrun{
-#'    convert_cols_xml_to_tbl(data; twb_xpath)
+#'    convert_cols_xml_to_tbl(twb_file, twb_xpath)
 #' }#'
-convert_cols_xml_to_tbl <- function(data,twb_xpath){
+convert_cols_xml_to_tbl <- function(twb_file,twb_xpath){
 
     tryCatch(
         {
-            test    <- xml2::xml_find_all(data, xpath = twb_xpath)
+            test    <- xml2::xml_find_all(twb_file, xpath = twb_xpath)
             test_xml <- purrr::map(xml2::xml_attrs(test), base::as.list) %>% purrr::reduce(dplyr::bind_rows)
             return(test_xml)
         },
@@ -28,7 +28,7 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
 
 #' Checks the "caption" created to ensure no duplicates
 #'
-#' @param twb_file a twb file
+#' @param twb_file a TWB file
 #' @param a_name a name for a calculation
 #' @export
 
