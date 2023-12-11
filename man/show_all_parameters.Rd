@@ -2,21 +2,21 @@
 % Please edit documentation in R/data_dictionary.R
 \name{show_all_parameters}
 \alias{show_all_parameters}
-\title{Create overview of parameters}
+\title{Creates an overview of parameters created in the workbook}
 \usage{
 show_all_parameters(twb_file)
 }
 \arguments{
-\item{twb_file}{a twb file from tableau}
+\item{twb_file}{a TWB file}
 }
 \value{
-list of parameters
+Returns a tibble of all parameters created in the workbook.
 }
 \description{
-Create overview of parameters
+Creates an overview of parameters created in the workbook
 }
 \examples{
  \dontrun{
-   all_parameters(twb_file = "test.xml")
+   all_parameters(twb_file = "test.twb")
 }
 }

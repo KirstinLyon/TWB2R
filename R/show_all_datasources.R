@@ -19,5 +19,6 @@ show_all_datasources <- function(twb_file){
                       filename = stringr::word(filename, -1, sep = fixed("/"))) %>%
         dplyr::select(class, directory, filename) %>%
         dplyr::distinct()
+    return(datasources)
 
 }

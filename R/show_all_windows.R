@@ -14,5 +14,6 @@
 show_all_windows <- function(twb_file){
     all_windows <- convert_cols_xml_to_tbl(twb_file, "//window") %>%
         dplyr::select(-c(maximized))
+    return(all_windows)
 
 }

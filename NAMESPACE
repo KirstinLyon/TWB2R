@@ -3,7 +3,6 @@
 export("%>%")
 export(check_name)
 export(create_calc)
-export(create_calc_id)
 export(show_all_datasources)
 export(show_all_other_created)
 export(show_all_parameters)

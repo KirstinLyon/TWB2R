@@ -31,6 +31,7 @@ convert_cols_xml_to_tbl <- function(data,twb_xpath){
 #' @param twb_file a twb file
 #' @param a_name a name for a calculation
 #' @export
+
 #' @return returns TRUE/FALSE depending on if the name exists in the dataset
 #' @keywords internal
 
@@ -63,7 +64,7 @@ check_name <- function(twb_file, a_name){
 #' create unique ID for the calculation.
 #'
 #' @param twb_file twb_file
-#' @export
+
 #' @return a unique code for a calculation
 
 #' @keywords internal
