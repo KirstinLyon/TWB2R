@@ -15,6 +15,7 @@ Imports:
     janitor,
     magrittr,
     purrr,
+    readr,
     stringr,
     VeryLargeIntegers,
     xml2
