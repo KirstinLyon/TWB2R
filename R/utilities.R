@@ -41,16 +41,14 @@ convert_cols_xml_to_tbl <- function(twb_file,twb_xpath){
 #' }
 check_name <- function(twb_file, a_name){
 
-    all_calc_names <- twb_file %>%
-        TWB2R::show_all_other_created()
+    data <- TWB2R::extract_all_metadata(twb_file)
 
-    all_param_names <- twb_file %>%
-        TWB2R::show_all_parameters()
+    raw <- TWB2R::get_metadata(data, "raw")
+    parameters <- TWB2R::get_metadata(data, "parameters")
+    created <- TWB2R::get_metadata(data, "created")
 
-    all_raw_names <- twb_file %>%
-        TWB2R::show_all_raw_fields()
+    all_tbl <- list(raw, parameters, created)
 
-    all_tbl <- list(all_calc_names, all_param_names, all_raw_names)
     all_names <- purrr::compact(all_tbl) %>%
         purrr::reduce(dplyr::bind_rows, .init = dplyr::tibble()) %>%
         dplyr::select(name) %>%
