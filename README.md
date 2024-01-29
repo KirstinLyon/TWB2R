@@ -41,7 +41,7 @@ devtools::install_github("KirstinLyon/TWB2R")
 library(TWB2R)
 library(tidyverse)
 #> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-#> ✔ dplyr     1.1.4     ✔ readr     2.1.4
+#> ✔ dplyr     1.1.4     ✔ readr     2.1.5
 #> ✔ forcats   1.0.0     ✔ stringr   1.5.1
 #> ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
 #> ✔ lubridate 1.9.3     ✔ tidyr     1.3.0
@@ -76,3 +76,5 @@ param <- TWB2R::show_all_parameters(twb_file) #all parameters created in the wor
 all_meta_data <- TWB2R::extract_all_metadata(twb_file)
 raw <- TWB2R::get_metadata(all_meta_data, "raw")
 ```
+
+Datasources is not currently tested for datasources on server
